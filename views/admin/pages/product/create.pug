@@ -1,0 +1,140 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+
+block main
+    +alert-error(5000)
+    
+    h1(class="mb-4") Thêm mới sản phẩm
+
+    form(
+        action=`/admin/products/create`
+        id="form-create-product"
+        method="POST"
+        enctype="multipart/form-data"
+    )
+
+        div(class="form-group")
+            label(for="title") Tiêu đề
+            input(
+                type="text"
+                class="form-control"
+                id="title"
+                name="title"
+                required
+            )
+            
+        div(class="form-group")
+            label(for="desc") Mô tả
+            textarea(
+                class="form-control"
+                id="desc"
+                name="description"
+                rows="5"
+            )
+
+        div(class="form-group")
+            label(for="category") Danh mục 
+            input(
+                type="text" 
+                class="form-control"
+                id="category"
+                name="category" 
+                placeholder="Ví dụ: beauty"
+            )
+
+        div(class="form-group")
+            label(for="price") Giá
+            input(
+                type="number"
+                class="form-control"
+                id="price"
+                name="price"
+                value="0"
+                min="0"
+                step="any"
+
+            )
+
+        div(class="form-group")
+            label(for="discount") % Giảm giá
+            input(
+                type="number"
+                class="form-control"
+                id="discount"
+                name="discountPercentage"
+                value="0"
+                min="0"
+                max="100"
+                step="any"
+            )
+
+        div(class="form-group")
+            label(for="rating") Đánh giá 
+            input(
+                type="number"
+                class="form-control"
+                id="rating"
+                name="rating"
+                value="0.00"
+                min="0"
+                max="5"
+                step="0.01"
+            )
+
+        div(class="form-group")
+            label(for="stock") Số lượng tồn kho (Stock)
+            input(
+                type="number"
+                class="form-control"
+                id="stock"
+                name="stock" 
+                value="0"
+                min="0"
+            )
+
+        div(
+            class="form-group"
+            upload-image
+        )
+            label(for="thumbnail") Ảnh
+            input(
+                type="file"
+                class="form-control-file"
+                id="thumbnail"
+                name="thumbnail"
+                accept="image/*"
+                upload-image-input
+            )
+            img(src="", 
+                alt=""
+                upload-image-preview
+            )
+
+        div(class="form-group form-check form-check-inline")
+            input(
+                type="radio"
+                class="form-check-input"
+                id="statusActive"
+                name="active"
+                value="active"
+                checked
+            )
+            label(for="statusActive" class="form-check-label") Hoạt động
+
+        div(class="form-group form-check form-check-inline")
+            input(
+                type="radio"
+                class="form-check-input"
+                id="statusInactive"
+                name="active"
+                value="inactive"
+            )
+            label(for="statusInactive" class="form-check-label") Dừng hoạt động
+
+        div(class="form-group")
+            button(
+                type="submit"
+                class="btn btn-primary"
+            ) Tạo mới
+
+    script(src="/admin/js/product.js")
