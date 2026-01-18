@@ -109,12 +109,13 @@ module.exports.deleteItem = async (req, res) => {
     res.redirect(backURL);
 }
 
+//[GET] admin/products/create
 module.exports.create = async (req, res) => { 
     res.render("admin/pages/product/create", {
         pageTitle: "Thêm mới sản phẩm"
     });
 }
-
+//[POST] admin/products/create
 module.exports.createPost = async (req, res) => { 
     
     req.body.price = parseInt(req.body.price);
@@ -127,10 +128,7 @@ module.exports.createPost = async (req, res) => {
     } else {
         req.body.position = parseInt(req.body.position);
     }
-    if(req.file){
-        req.body.thumbnail = `/uploads/${req.file.filename}`
-    }
-
+   
     const product = new Product(req.body);
     await product.save();
 

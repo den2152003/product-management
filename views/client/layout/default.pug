@@ -1,7 +1,7 @@
 html
   head
     title #{pageTitle} 
-    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css")
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css')
     link(rel="stylesheet", href="/css/style.css")
   body
 
@@ -15,8 +15,3 @@ html
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" ></script>
 
     script(src="/js/script.js") 
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js')
-    
-    //- Tải script xử lý logic frontend MQTT của chúng ta
-    //- File này cần phải nằm trong thư mục public/js/
-    script(src="/js/mqtt-client.js")

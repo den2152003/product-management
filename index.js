@@ -7,10 +7,10 @@ const session = require("express-session");
 
 require("dotenv").config();
 
-const route = require("./routes/client/index.route")
-const routeAdmin = require("./routes/admin/index.route");
+const route = require("./routes/client/index.route.js")
+const routeAdmin = require("./routes/admin/index.route.js");
 
-const database = require("./config/database");
+const database = require("./config/database.js");
 
 
 const app = express();
@@ -26,6 +26,7 @@ app.use(flash());
 const port = process.env.PORT;
 
 database.connect();
+
 
 app.set('views', `${__dirname}/views`); // specify the views directory
 app.set('view engine', 'pug'); // register the template engine
