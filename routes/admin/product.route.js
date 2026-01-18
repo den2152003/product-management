@@ -1,10 +1,11 @@
 const express = require("express");
 const multer = require('multer');
-const storageMulter = require("../../helper/storageMulter");
 const controller = require("../../controller/admin/product.controller");
 const validate = require("../../validates/admin/product.validate");
 
-const upload = multer({ storage: storageMulter() });
+const upload = multer();
+
+const uploadCloud = require("../../middlewares/admin/uploadCloud.middleware")
 
 const router = express.Router();   
     
@@ -21,15 +22,16 @@ router.get('/create', controller.create);
 router.post(
     '/create', 
     upload.single("thumbnail"), 
+    uploadCloud.upload,
     validate.createPost,
     controller.createPost
 ); // dùng multer để tải ảnh
 
 router.get('/edit/:id', controller.edit);
 
-router.patch(
-    '/edit/:id', 
+router.patch('/edit/:id', 
     upload.single("thumbnail"), 
+    uploadCloud.upload,
     validate.createPost,
     controller.editPatch);
 

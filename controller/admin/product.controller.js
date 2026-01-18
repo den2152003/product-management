@@ -6,24 +6,23 @@ const paginationHelper = require("../../helper/pagination");
 
 
 //[GET]/admin/products
-module.exports.index = async (req, res) => { 
+module.exports.index = async (req, res) => {
     // console.log(req.query.active);
 
     // Helper lọc
     filterStatus = filterStatusHelper(req.query);
-    
+
 
     let find = {
         delete: false
     };
 
-    if(req.query.active)    
+    if (req.query.active)
         find.active = req.query.active;
 
     const objectSearch = searchHelper(req.query);
 
-    if(objectSearch.reg)
-    {
+    if (objectSearch.reg) {
         find.title = objectSearch.reg;
     }
 
@@ -53,11 +52,11 @@ module.exports.changStatus = async (req, res) => {
     const status = req.params.status;
     const id = req.params.id;
 
-    await Product.updateOne({_id: req.params.id}, {active: req.params.status});
+    await Product.updateOne({ _id: req.params.id }, { active: req.params.status });
 
     req.flash('success', 'Cập nhật trạng thái sản phẩm thành công!');
 
-    backURL=req.header('Referer') || '/';
+    backURL = req.header('Referer') || '/';
     // do your thang
     res.redirect(backURL);
 
@@ -68,18 +67,18 @@ module.exports.changeMulti = async (req, res) => {
     const type = req.body.type;
     const ids = req.body.ids.split(", ");
 
-    switch(type){
+    switch (type) {
         case "active":
-            await Product.updateMany({_id : {$in: ids}}, {active: "active"});
+            await Product.updateMany({ _id: { $in: ids } }, { active: "active" });
             req.flash('success', `Cập nhật trạng thái ${ids.length} sản phẩm thành công!`);
             break;
         case "inactive":
-            await Product.updateMany({_id : {$in: ids}}, {active: "inactive"});
+            await Product.updateMany({ _id: { $in: ids } }, { active: "inactive" });
             req.flash('success', `Cập nhật trạng thái ${ids.length} sản phẩm thành công!`);
             break;
         case "delete-all":
             await Product.updateMany(
-                {_id : {$in: ids}}, 
+                { _id: { $in: ids } },
                 {
                     delete: true,
                     deletedAt: new Date()
@@ -87,7 +86,7 @@ module.exports.changeMulti = async (req, res) => {
             break;
     }
 
-    backURL=req.header('Referer') || '/';
+    backURL = req.header('Referer') || '/';
     // do your thang
     res.redirect(backURL);
 }
@@ -97,27 +96,27 @@ module.exports.deleteItem = async (req, res) => {
     const id = req.params.id;
 
     await Product.updateOne(
-        {_id: id}, 
+        { _id: id },
         {
             delete: true,
             deletedAt: new Date()
         }
     );
     req.flash("success", "Đã xóa sản phẩm thành công");
-    backURL=req.header('Referer') || '/';
+    backURL = req.header('Referer') || '/';
     // do your thang
     res.redirect(backURL);
 }
 
 //[GET] admin/products/create
-module.exports.create = async (req, res) => { 
+module.exports.create = async (req, res) => {
     res.render("admin/pages/product/create", {
         pageTitle: "Thêm mới sản phẩm"
     });
 }
 //[POST] admin/products/create
-module.exports.createPost = async (req, res) => { 
-    
+module.exports.createPost = async (req, res) => {
+
     req.body.price = parseInt(req.body.price);
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
@@ -128,7 +127,7 @@ module.exports.createPost = async (req, res) => {
     } else {
         req.body.position = parseInt(req.body.position);
     }
-   
+
     const product = new Product(req.body);
     await product.save();
 
@@ -136,7 +135,7 @@ module.exports.createPost = async (req, res) => {
 
 }
 
-module.exports.edit = async (req, res) => { 
+module.exports.edit = async (req, res) => {
     console.log(req.params.id);
     try {
         const find = {
@@ -149,21 +148,19 @@ module.exports.edit = async (req, res) => {
         res.render("admin/pages/product/edit.pug", {
             pageTitle: "Thêm mới sản phẩm",
             product: product
-    });
+        });
     } catch (error) {
         res.redirect("/admin/products");
     }
 }
 
-module.exports.editPatch = async (req, res) => { 
+module.exports.editPatch = async (req, res) => {
     req.body.price = parseInt(req.body.price);
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
 
-    
-    if(req.file){
-        req.body.thumbnail = `/uploads/${req.file.filename}`
-    }
+
+   
 
     try {
         await Product.updateOne({ _id: req.params.id }, req.body);
@@ -188,7 +185,7 @@ module.exports.detail = async (req, res) => {
         res.render("admin/pages/product/detail.pug", {
             pageTitle: product.title,
             product: product
-    });
+        });
     } catch (error) {
         res.redirect("/admin/products");
     }
