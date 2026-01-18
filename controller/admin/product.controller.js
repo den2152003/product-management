@@ -35,8 +35,21 @@ module.exports.index = async (req, res) => {
 
     paginationHelper(objectPagination, req.query, countProduct);
 
-    const products = await Product.find(find).limit(objectPagination.limitItem).skip(objectPagination.skip);
+    let sort = {};
+
+    if (req.query.sortKey && req.query.sortValue){
+        sort[req.query.sortKey] = req.query.sortValue;
+    } else {
+        sort = {};
+    }
+
+    const products =  await Product.find(find)
+    .sort(sort)
+    .limit(objectPagination.limitItem)
+    .skip(objectPagination.skip);
     // end pagination
+
+
 
     res.render("admin/pages/product/index", {
         pageTitle: "Trang danh sách sản phẩm",
