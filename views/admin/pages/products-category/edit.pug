@@ -1,5 +1,6 @@
 extends ../../layout/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
 
 block main
     +alert-error(5000)
@@ -9,7 +10,7 @@ block main
     h1(class="mb-4") chỉnh sửa danh mục
 
     form(
-        action=`/admin/products-category/edit/${records._id}?_method=PATCH`
+        action=`/admin/products-category/edit/${data._id}?_method=PATCH`
         method="POST"
         enctype="multipart/form-data"
     )
@@ -22,7 +23,7 @@ block main
                 id="title"
                 name="title"
                 required
-                value=records.title
+                value=data.title
             )
 
         div(class="form-group")
@@ -34,8 +35,7 @@ block main
             )
                 option(value="") -- Danh mục cha --
                 if(records)
-                    each item in records
-                        option(value=item.id) #{item.title}
+                    +select-tree(records, 1, data.parent_id)
 
         div(class="form-group")
             label(for="desc") Mô tả
@@ -44,8 +44,8 @@ block main
                 id="desc"
                 name="description"
                 rows="5"
-                value=records.description
-            ) #{records.description}
+                value=data.description
+            ) #{data.description}
 
 
 
@@ -61,9 +61,9 @@ block main
                 name="thumbnail"
                 accept="image/*"
                 upload-image-input
-                value=records.thumbnail
+                value=data.thumbnail
             )
-            img(src=records.thumbnail, 
+            img(src=data.thumbnail, 
                 alt=""
                 upload-image-preview
             )
@@ -75,7 +75,7 @@ block main
                 id="statusActive"
                 name="active"
                 value="active"
-                checked=(records.active == 'active' ? true : false)
+                checked=(data.active == 'active' ? true : false)
             )
             label(for="statusActive" class="form-check-label") Hoạt động
 
@@ -86,7 +86,7 @@ block main
                 id="statusInactive"
                 name="active"
                 value="inactive"
-                checked=(records.active == 'inactive' ? true : false)
+                checked=(data.active == 'inactive' ? true : false)
             )
             label(for="statusInactive" class="form-check-label") Dừng hoạt động
 

@@ -47,9 +47,7 @@ module.exports.create = async (req, res) => {
     const find = {
         delete: false,
     };
-
     
-
     const records = await ProductCategory.find(find);
 
     const newRecords = createTreeHelper.tree(records);
@@ -77,18 +75,22 @@ module.exports.createPost = async (req, res) => {
 
 //[GET]/admin/products-category/edit/:id
 module.exports.edit = async (req, res) => {
-    console.log(req.params.id);
     try {
         const find = {
             delete: false,
             _id: req.params.id
         };
 
-        const records = await ProductCategory.findOne(find);
+        const data = await ProductCategory.findOne(find);
+
+        const records = await ProductCategory.find({delete:false});
+
+        const newRecords = createTreeHelper.tree(records);
 
         res.render("admin/pages/products-category/edit.pug", {
             pageTitle: "Chỉnh sửa danh mục",
-            records: records
+            data: data,
+            records: newRecords
         });
     } catch (error) {
         res.redirect("/admin/products-category");
@@ -96,13 +98,13 @@ module.exports.edit = async (req, res) => {
 }
 
 module.exports.editPatch = async (req, res) => {
+    req.body.position = parseInt(req.body.position);
     try {
         await ProductCategory.updateOne({ _id: req.params.id }, req.body);
         req.flash("success", `Cập nhật thành công!`);
     } catch (error) {
         req.flash("error", `Cập nhật thất bại!`);
     }
-
 
     res.redirect("/admin/products-category");
 }
