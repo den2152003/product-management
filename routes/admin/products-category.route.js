@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require('multer');
-const controller = require("../../controller/admin/product.controller");
-const validate = require("../../validates/admin/product.validate");
+const controller = require("../../controller/admin/products-category.controller");
+const validate = require("../../validates/admin/product-category.validate");
 
 const upload = multer();
 
@@ -11,12 +11,6 @@ const router = express.Router();
     
 router.get('/', controller.index);
 
-router.patch('/change-status/:status/:id', controller.changStatus);
-
-router.patch('/change-multi', controller.changeMulti);
-
-router.delete('/delete/:id', controller.deleteItem);
-
 router.get('/create', controller.create);
 
 router.post(
@@ -25,7 +19,7 @@ router.post(
     uploadCloud.upload,
     validate.createPost,
     controller.createPost
-); // dùng multer để tải ảnh
+);
 
 router.get('/edit/:id', controller.edit);
 
@@ -33,10 +27,8 @@ router.patch(
     '/edit/:id', 
     upload.single("thumbnail"), 
     uploadCloud.upload,
-    validate.createPost,
+    validate.editPost,
     controller.editPatch
 );
-
-router.get('/detail/:id', controller.detail);
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const express = require("express");
+var path = require('path');
 const methodOverride = require("method-override");
 const bodyParser = require("body-parser");
 const flash = require("express-flash");
@@ -12,8 +13,11 @@ const routeAdmin = require("./routes/admin/index.route.js");
 
 const database = require("./config/database.js");
 
-
 const app = express();
+
+const port = process.env.PORT;
+
+database.connect();
 
 app.use(methodOverride('_method'));
 
@@ -23,10 +27,7 @@ app.use(cookieParser('DEN215'));
 app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());
 
-const port = process.env.PORT;
-
-database.connect();
-
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 
 app.set('views', `${__dirname}/views`); // specify the views directory
 app.set('view engine', 'pug'); // register the template engine

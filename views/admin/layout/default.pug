@@ -4,6 +4,7 @@ html
     title= pageTitle
     link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css')
     link(rel="stylesheet", href="/admin/css/style.css")
+    <script src="https://cdn.tiny.cloud/1/ede8qqon9hdp4juxbut5rrjma0cydvmbkpwvabmwyeeiyrmi/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
   body
     include ../partial/header.pug    
     // Cấu trúc layout/block có thể là:
@@ -15,6 +16,7 @@ html
     script(src='https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js')
     script(src='https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js')
 
-
+    script(src="/admin/js/tinymce-config.js")
+    
     
     script(type="module" src="/admin/js/script.js") 
