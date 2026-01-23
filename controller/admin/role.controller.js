@@ -58,3 +58,65 @@ module.exports.editPatch = async (req, res) => {
 
     res.redirect("/admin/roles");
 }
+
+module.exports.deleteItem = async (req, res) => {
+    const _id = req.params._id;
+
+    await Role.updateOne(
+        { _id: _id },
+        {
+            delete: true,
+            deletedAt: new Date()
+        }
+    );
+    req.flash("success", "Đã xóa sản phẩm thành công");
+    backURL = req.header('Referer') || '/';
+    // do your thang
+    res.redirect(backURL);
+}
+
+module.exports.detail = async (req, res) => {
+    try {
+        const find = {
+            delete: false,
+            _id: req.params._id
+        };
+
+        const data = await Role.findOne(find);
+
+        res.render("admin/pages/roles/detail.pug", {
+            pageTitle: data.title,
+            data: data
+        });
+    } catch (error) {
+        res.redirect("/admin/roles");
+    }
+
+}
+
+module.exports.permissions = async (req, res) => {
+    try {
+        const find = {
+            delete: false,
+        };
+
+        const records = await Role.find(find);
+
+        res.render("admin/pages/roles/permissions.pug", {
+            pageTitle: records.title,
+            records: records
+        });
+    } catch (error) {
+        res.redirect("/admin/roles/permissions");
+    }
+}
+
+module.exports.permissionsPatch = async (req, res) => {
+    const permissions = JSON.parse(req.body.permissions);
+
+    for (const item of permissions){
+        await Role.updateOne({_id: item.id},{permissions: item.permission});
+    }
+    req.flash("success", `Cập nhật thành công!`);
+    res.redirect("/admin/roles/permissions");
+}

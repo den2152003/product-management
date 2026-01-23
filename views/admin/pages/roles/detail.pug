@@ -1,0 +1,17 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+
+block main
+    +alert-error(5000)
+
+    if (data.title)
+        h1(class="mb-4") #{data.title}
+
+    if (data.description)
+        span Mô tả: 
+        div(class="mb-4") !{data.description}
+
+    a(
+        href=`/admin/roles/edit/${data._id}`
+        class="btn btn-warning btn-sm ml-1"
+    ) Chỉnh Sửa
