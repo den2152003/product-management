@@ -9,4 +9,8 @@ router.get('/create', controller.create);
 
 router.post('/create', controller.createPost);
 
+router.get('/edit/:_id', controller.edit);
+
+router.patch('/edit/:_id', controller.editPatch);
+
 module.exports = router;
