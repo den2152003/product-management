@@ -107,4 +107,68 @@ module.exports.editPatch = async (req, res) => {
     }
 
     res.redirect("/admin/products-category");
+
+}
+
+module.exports.detail = async (req, res) => {
+    try {
+        const find = {
+            delete: false,
+            _id: req.params.id
+        };
+
+        const records = await ProductCategory.findOne(find);
+
+        res.render("admin/pages/products-category/detail.pug", {
+            pageTitle: records.title,
+            records: records
+        });
+    } catch (error) {
+        res.redirect("/admin/products");
+    }
+
+}
+
+module.exports.changeMulti = async (req, res) => {
+    const type = req.body.type;
+    const ids = req.body.ids.split(", ");
+
+    switch (type) {
+        case "active":
+            await ProductCategory.updateMany({ _id: { $in: ids } }, { active: "active" });
+            req.flash('success', `Cập nhật trạng thái ${ids.length} sản phẩm thành công!`);
+            break;
+        case "inactive":
+            await ProductCategory.updateMany({ _id: { $in: ids } }, { active: "inactive" });
+            req.flash('success', `Cập nhật trạng thái ${ids.length} sản phẩm thành công!`);
+            break;
+        case "delete-all":
+            await ProductCategory.updateMany(
+                { _id: { $in: ids } },
+                {
+                    delete: true,
+                    deletedAt: new Date()
+                });
+            break;
+    }
+
+    backURL = req.header('Referer') || '/';
+    // do your thang
+    res.redirect(backURL);
+}
+
+module.exports.deleteItem = async (req, res) => {
+    const id = req.params.id;
+
+    await ProductCategory.updateOne(
+        { _id: id },
+        {
+            delete: true,
+            deletedAt: new Date()
+        }
+    );
+    req.flash("success", "Đã xóa sản phẩm thành công");
+    backURL = req.header('Referer') || '/';
+    // do your thang
+    res.redirect(backURL);
 }

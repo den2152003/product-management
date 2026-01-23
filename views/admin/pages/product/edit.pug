@@ -1,5 +1,6 @@
 extends ../../layout/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
 
 block main
     +alert-error(5000)
@@ -25,6 +26,17 @@ block main
                 required
                 value=product.title
             )
+
+        div(class="form-group")
+            label(for="parent_id") Danh mục cha
+            select(
+                class="form-control"
+                id="parent_id"
+                name="parent_id" 
+            )
+                option(value="") -- Danh mục cha --
+                if(records)
+                    +select-tree(records, 1, product.product_category_id)
             
         div(class="form-group")
             label(for="desc") Mô tả
@@ -36,16 +48,6 @@ block main
                 value=product.description
             ) #{product.description}
 
-        div(class="form-group")
-            label(for="category") Danh mục 
-            input(
-                type="text" 
-                class="form-control"
-                id="category"
-                name="category" 
-                placeholder="Ví dụ: beauty"
-                value=product.category
-            )
 
         div(class="form-group")
             label(for="price") Giá

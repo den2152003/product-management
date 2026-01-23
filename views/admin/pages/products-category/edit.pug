@@ -48,6 +48,17 @@ block main
             ) #{data.description}
 
 
+        div(class="form-group")
+            label(for="position") Vị trí 
+            input(
+                type="number"
+                class="form-control"
+                id="position"
+                name="position"
+                placeholder="Tự động tăng"
+                min="1"
+                value=data.position
+            )
 
         div(
             class="form-group"

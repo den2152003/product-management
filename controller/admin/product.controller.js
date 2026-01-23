@@ -1,8 +1,9 @@
-const mongoose = require("mongoose");
 const Product = require("../../model/product.model");
+const ProductCategory = require("../../model/product-category.model");
 const filterStatusHelper = require("../../helper/filterStatus");
 const searchHelper = require("../../helper/search");
 const paginationHelper = require("../../helper/pagination");
+const createTreeHelper = require("../../helper/createTree");
 
 
 //[GET]/admin/products
@@ -37,18 +38,17 @@ module.exports.index = async (req, res) => {
 
     let sort = {};
 
-    if (req.query.sortKey && req.query.sortValue){
+    if (req.query.sortKey && req.query.sortValue) {
         sort[req.query.sortKey] = req.query.sortValue;
     } else {
         sort = {};
     }
 
-    const products =  await Product.find(find)
-    .sort(sort)
-    .limit(objectPagination.limitItem)
-    .skip(objectPagination.skip);
+    const products = await Product.find(find)
+        .sort(sort)
+        .limit(objectPagination.limitItem)
+        .skip(objectPagination.skip);
     // end pagination
-
 
 
     res.render("admin/pages/product/index", {
@@ -56,7 +56,7 @@ module.exports.index = async (req, res) => {
         products: products,
         filterStatus: filterStatus,
         keyword: objectSearch.keyword,
-        pagination: objectPagination,
+        pagination: objectPagination
     });
 }
 
@@ -123,8 +123,17 @@ module.exports.deleteItem = async (req, res) => {
 
 //[GET] admin/products/create
 module.exports.create = async (req, res) => {
+    const find = {
+        delete: false,
+    };
+
+    const category = await ProductCategory.find(find);
+
+    const newCategory = createTreeHelper.tree(category);
+
     res.render("admin/pages/product/create", {
-        pageTitle: "Thêm mới sản phẩm"
+        pageTitle: "Thêm mới sản phẩm",
+        category: newCategory
     });
 }
 //[POST] admin/products/create
@@ -158,9 +167,15 @@ module.exports.edit = async (req, res) => {
 
         const product = await Product.findOne(find);
 
+
+        const records = await ProductCategory.find({ delete: false });
+
+        const newRecords = createTreeHelper.tree(records);
+
         res.render("admin/pages/product/edit.pug", {
             pageTitle: "Thêm mới sản phẩm",
-            product: product
+            product: product,
+            records: newRecords
         });
     } catch (error) {
         res.redirect("/admin/products");
@@ -171,6 +186,7 @@ module.exports.editPatch = async (req, res) => {
     req.body.price = parseInt(req.body.price);
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
+
 
     try {
         await Product.updateOne({ _id: req.params.id }, req.body);

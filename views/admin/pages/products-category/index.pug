@@ -28,7 +28,28 @@ block main
         .card-header Danh sách
             .card-body
                 .row 
-                    .col-8
+                    .col-1
+                    form(
+                        action="/admin/products-category/change-multi?_method=PATCH"
+                        method="POST"
+                        form-change-multi
+                        )
+                        .d-flex.align-items-center   
+                            .form-group
+                            select(name="type" class="form-control w-auto" )
+                                option(disabled selected) -- Chọn hành động --
+                                option(value="active") Hoạt động
+                                option(value="inactive") Dừng hoạt động
+                                option(value="delete-all") Xóa tất cả
+
+                            .form-group
+                            input(
+                                type="text"
+                                name="ids"
+                                value=""
+                                class="form-control d-none"
+                            )
+                            button(type="submit" class="btn btn-primary w-auto" ) Áp dụng
                     .col-4
                         a(
                             href=`/admin/products-category/create`
@@ -52,3 +73,12 @@ block main
 
                     tbody
                         +table-tree(records)
+    
+    form(
+        action="", 
+        method="post"
+        id = "form-delete-product-category"
+        data-path = "/admin/products-category/delete"
+    ) 
+
+    script(src="/admin/js/product-category.js") 

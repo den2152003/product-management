@@ -27,8 +27,14 @@ router.patch(
     '/edit/:id', 
     upload.single("thumbnail"), 
     uploadCloud.upload,
-    validate.editPost,
+    // validate.editPost,
     controller.editPatch
 );
+
+router.get('/detail/:id', controller.detail);
+
+router.patch('/change-multi', controller.changeMulti);
+
+router.delete('/delete/:id', controller.deleteItem);
 
 module.exports = router;
