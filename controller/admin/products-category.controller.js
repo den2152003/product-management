@@ -172,3 +172,18 @@ module.exports.deleteItem = async (req, res) => {
     // do your thang
     res.redirect(backURL);
 }
+
+//[PATCH] /admin/products-category/change-status/:active/:id
+module.exports.changeStatus = async (req, res) => {
+    const status = req.params.status;
+    const id = req.params.id;
+
+    await ProductCategory.updateOne({ _id: id }, { active: status });
+
+    req.flash('success', 'Cập nhật trạng thái sản phẩm thành công!');
+
+    backURL = req.header('Referer') || '/';
+    // do your thang
+    res.redirect(backURL);
+
+}

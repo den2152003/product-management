@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const flash = require("express-flash");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const moment = require('moment');
 
 require("dotenv").config();
 
@@ -28,6 +29,8 @@ app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());
 
 app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+
+app.locals.moment = moment;
 
 app.set('views', `${__dirname}/views`); // specify the views directory
 app.set('view engine', 'pug'); // register the template engine

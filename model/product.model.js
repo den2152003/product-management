@@ -20,6 +20,13 @@ const productSchema = new mongoose.Schema(
             unique: true
         },
         thumbnail: String,
+        createdBy:{
+            account_id: String,
+            createAt: {
+                type: Date,
+                default: Date.now
+            }
+        },
         delete: {
             type: Boolean,
             default: false

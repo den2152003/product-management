@@ -138,7 +138,6 @@ module.exports.forgotPasswordPost = async (req, res) => {
 //[GET] /user/password/otp?email=
 module.exports.otpPassword = async (req, res) => {
     const email = req.query.email;
-    console.log(email);
     res.render("client/pages/users/otp-password", {
         pageTitle: "Đăng nhập",
         email: email

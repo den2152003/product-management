@@ -118,7 +118,6 @@ const uploadImageInput = document.querySelector("[upload-image-input]");
 const uploadImagePreview = document.querySelector("[upload-image-preview]");
 if(uploadImageInput){
     uploadImageInput.addEventListener("change", (e) => {
-        // console.log(e);
         const file = e.target.files[0];
         if(file){
             uploadImagePreview.src = URL.createObjectURL(file);
@@ -138,7 +137,6 @@ if (sort){
 
     sortSelect.addEventListener("change", (e) => {
         const value = e.target.value;
-        console.log(value);
         const [sortKey, sortValue] = value.split("-");
 
         url.searchParams.set("sortKey", sortKey);

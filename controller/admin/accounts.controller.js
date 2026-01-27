@@ -1,4 +1,6 @@
 const Account = require('../../model/account.model');
+const Role = require('../../model/role.model');
+
 const md5 = require("md5");
 
 //[GET] /admin/accounts
@@ -8,7 +10,13 @@ module.exports.index = async (req, res) => {
     }
     const records = await Account.find(find).select("-password -token");
 
-    console.log(records);
+    for (const record of records) {
+        const role = await Role.findOne({
+            _id: record.role_id, // Giả định record có trường role_id
+            delete: false
+        });
+        record.role = role;
+    }
     res.render("admin/pages/accounts/index", {
         pageTitle: "Danh sách tài khoản",
         records: records
@@ -17,14 +25,16 @@ module.exports.index = async (req, res) => {
 
 //[GET] /admin/accounts/create
 module.exports.create = async (req, res) => { 
+    const roles = await Role.find({ delete: false });
+
     res.render("admin/pages/accounts/create", {
-        pageTitle: "Thêm mới tài khoản"
+        pageTitle: "Thêm mới tài khoản",
+        roles: roles
     });
 }
 
 //[POST] /admin/accounts/create
 module.exports.createPost = async (req, res) => { 
-
     const emailExits = await Account.findOne({
         email: req.body.email,
         deleted: false
@@ -44,14 +54,10 @@ module.exports.createPost = async (req, res) => {
         
         res.redirect("/admin/accounts");
     }
-
-
 }
 
 //[GET] /admin/accounts/edit/:id
 module.exports.edit = async (req, res) => { 
-    console.log(req.params.id);
-    
     const find = {
             deleted: false,
             _id: req.params.id
@@ -60,9 +66,12 @@ module.exports.edit = async (req, res) => {
         
         const records = await Account.findOne(find);
 
+        const roles = await Role.find({ delete: false });
+
         res.render("admin/pages/accounts/edit.pug", {
             pageTitle: "Chỉnh sửa tài khoản",
-            records: records
+            records: records,
+            roles: roles
     });
     } catch (error) {
         res.redirect("/admin/accounts");
@@ -70,8 +79,6 @@ module.exports.edit = async (req, res) => {
 }
 
 module.exports.editPatch = async (req, res) => { 
-
-    // console.log(req.body.email);
     const id = req.params.id;
     
     const emailExist = await Account.findOne({
@@ -101,4 +108,15 @@ module.exports.editPatch = async (req, res) => {
     // do your thang
     res.redirect(backURL);
 
+}
+
+//[PATCH] /admin/accounts/change-status/:active/:id
+module.exports.changeStatus = async (req, res) => {
+    await Account.updateOne({ _id: req.params.id }, { status: req.params.status });
+
+    req.flash('success', 'Cập nhật trạng thái sản phẩm thành công!');
+
+    backURL = req.header('Referer') || '/';
+    // do your thang
+    res.redirect(backURL);
 }

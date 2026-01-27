@@ -1,5 +1,7 @@
 const Product = require("../../model/product.model");
 const ProductCategory = require("../../model/product-category.model");
+const Account = require("../../model/account.model");
+
 const filterStatusHelper = require("../../helper/filterStatus");
 const searchHelper = require("../../helper/search");
 const paginationHelper = require("../../helper/pagination");
@@ -50,13 +52,18 @@ module.exports.index = async (req, res) => {
         .skip(objectPagination.skip);
     // end pagination
 
+    for(const product of products){
+        const user = await Account.findOne({_id: product.createdBy.account_id});
+        if(user)
+            product.accountFullName = user.fullName;
+    }
 
     res.render("admin/pages/product/index", {
         pageTitle: "Trang danh sách sản phẩm",
         products: products,
         filterStatus: filterStatus,
         keyword: objectSearch.keyword,
-        pagination: objectPagination
+        pagination: objectPagination,
     });
 }
 
@@ -138,7 +145,6 @@ module.exports.create = async (req, res) => {
 }
 //[POST] admin/products/create
 module.exports.createPost = async (req, res) => {
-
     req.body.price = parseInt(req.body.price);
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
@@ -150,15 +156,19 @@ module.exports.createPost = async (req, res) => {
         req.body.position = parseInt(req.body.position);
     }
 
+    req.body.createdBy = {
+        account_id: res.locals.user._id
+    };
+
     const product = new Product(req.body);
     await product.save();
 
+    req.flash("success", `Thêm mới thành công!`);
     res.redirect("/admin/products");
 
 }
 
 module.exports.edit = async (req, res) => {
-    console.log(req.params.id);
     try {
         const find = {
             delete: false,

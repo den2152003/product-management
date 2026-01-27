@@ -3,7 +3,9 @@ const md5 = require("md5");
 
 //[GET] /admin/auth/login
 module.exports.login = async (req, res) => {
-    if(req.cookies.token){
+    const user = await Account.findOne({token: req.cookies.token});
+
+    if(req.cookies.token && user){
         res.redirect("/admin/dashboard");
     }
     else{
@@ -33,6 +35,14 @@ module.exports.loginPost = async (req, res) => {
 
     if(md5(password) != user.password){
         req.flash('error', `Sai mật khẩu!`);
+        backURL=req.header('Referer') || '/';
+        // do your thang
+        res.redirect(backURL);
+        return;
+    }
+
+    if(user.active == "inactive"){
+        req.flash('error', `Tài khoản đã bị khóa!`);
         backURL=req.header('Referer') || '/';
         // do your thang
         res.redirect(backURL);

@@ -1,28 +1,16 @@
-// Delete Item
-const buttonDelete = document.querySelectorAll("[button-delete]");
-
-if(buttonDelete.length > 0){
-    const formDeleteItem = document.querySelector("#form-delete-product-category");
-    const path = formDeleteItem.getAttribute("data-path");
-
-    buttonDelete.forEach(button => {
-        button.addEventListener("click", () => {
-            const isConfirm = confirm("Bạn có muốn xóa không?");
-            
-            if(isConfirm){
-                const id = button.getAttribute("data-id");
-
-                const action = `${path}/${id}?_method=DELETE`;
-
-                formDeleteItem.action = action;
-
-                formDeleteItem.submit();
-            }
-            
-        })
+// Upload Image
+const uploadImageInput = document.querySelector("[upload-image-input]");
+const uploadImagePreview = document.querySelector("[upload-image-preview]");
+if(uploadImageInput){
+    uploadImageInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if(file){
+            uploadImagePreview.src = URL.createObjectURL(file);
+        }
     })
 }
-// End Delete Item
+
+// End Upload Image
 
 const buttonChangeStatus = document.querySelectorAll("[button-change-status]");
 // Change Status
@@ -35,14 +23,13 @@ if (buttonChangeStatus.length > 0)
             e.preventDefault();
 
             const statusCurrent = button.getAttribute("data-status");
-
             const id = button.getAttribute("data-id");
+            
 
             const statusChange = statusCurrent == "active" ? "inactive" : "active";
 
             const action = path + `/${statusChange}/${id}?_method=PATCH`;
-
-
+            console.log(action);
             formChangeStatus.action = action;
             formChangeStatus.submit();
         })
