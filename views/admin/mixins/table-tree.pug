@@ -43,7 +43,10 @@ mixin table-tree(items, level = 1)
                 data-id=item._id 
                 button-change-status=canEdit
                 ) Dừng hoạt động
-                   
+
+        td 
+            p #{item.accountFullName}
+            p #{moment((item.createdBy.createAt)).format("DD/MM/YYYY")}          
         td
             a(
                 href=`/admin/products-category/detail/${item._id}`

@@ -1,0 +1,28 @@
+extends ../../layout/default.pug
+
+block main
+  .container.my-3
+    .row
+      .col-12
+        include ../../partial/list-btn-users.pug 
+
+    .row
+      each user in users
+        .col-6
+          div(class="box-user")
+            div(class="inner-avatar")
+              img(
+                src=(user.avatar ? user.avatar : "/images/avatar-default.png")
+                alt=user.fullName
+              )
+            div(class="inner-info")
+              div(class="inner-name") #{user.fullName}
+              div(class="inner-buttons")
+                button(
+                  class="btn btn-sm btn-primary mr-1"
+                  btn-add-friend=user.id
+                ) Kết bạn
+                button(
+                  class="btn btn-sm btn-secondary"
+                  btn-cancel-friend=user.id
+                ) Hủy

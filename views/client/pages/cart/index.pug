@@ -1,0 +1,58 @@
+extends ../../layout/default.pug
+include ../../mixin/box-head.pug
+include ../../mixin/alert.pug
+
+block main  
+    +alert-success(5000)
+    .container.my-5
+        .row
+            .col-12
+                h1.mb-4(style="color: #1a5928; font-weight: bold;") Giỏ hàng
+
+        .row
+            .col-12
+                table.table.table-bordered.text-center.align-middle
+                    thead
+                        tr
+                        th STT
+                        th Ảnh
+                        th Tên
+                        th Giá
+                        th Số lượng
+                        th Tổng tiền
+                        th Hành động
+                    tbody
+                        //- Giả sử biến 'cart' chứa danh sách sản phẩm trong giỏ
+                        if(cartDetail.products.length > 0)
+                            each item, index in cartDetail.products
+                                tr
+                                td #{index + 1}
+                                td
+                                    img(src=item.productInfo.thumbnail, alt=item.productInfo.title, width="80px")
+                                td
+                                    a(href=`/products/detail/${item.productInfo.slug}`) #{item.productInfo.title}
+                                td #{item.productInfo.priceNew}$
+                                td
+                                    input(
+                                    type="number", 
+                                    value=item.quantity, 
+                                    name="quantity"
+                                    min="1", 
+                                    style="width: 60px;"
+                                    product-id=item.product_id
+                                    )
+                                td #{item.totalPrice}$
+                                td
+                                    a(
+                                        href=`/cart/delete/${item.product_id}`
+                                        class = "btn btn-danger"
+                                    ) Xóa
+
+        .text-right.mt-4
+            h3 Tổng đơn hàng: #{cartDetail.totalPrice}$
+            a(
+                href=`/checkout`
+                class = "btn btn-success"
+            ) THANH TOÁN
+    
+    script(src="/js/cart.js") 

@@ -30,7 +30,7 @@ router.get('/password/reset', controller.resetPassword);
 
 router.post('/password/reset',validate.resetPassword, controller.resetPasswordPost);
 
-router.get('/info', controller.info);
+router.get('/info',authMiddleWare.requireAuth, controller.info);
 
 
 

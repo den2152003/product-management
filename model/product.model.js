@@ -32,6 +32,7 @@ const productSchema = new mongoose.Schema(
             default: false
         },
         active: String,
+        featured: String,
         deletedAt: Date
     },
     {

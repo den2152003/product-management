@@ -6,6 +6,8 @@ const flash = require("express-flash");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const moment = require('moment');
+const http = require("http");
+const { Server } = require("socket.io");
 
 require("dotenv").config();
 
@@ -15,6 +17,10 @@ const routeAdmin = require("./routes/admin/index.route.js");
 const database = require("./config/database.js");
 
 const app = express();
+const server = http.createServer(app); // Tạo server từ app
+const io = new Server(server);
+
+global._io = io;
 
 const port = process.env.PORT;
 
@@ -40,7 +46,13 @@ app.use(express.static(`${__dirname}/public`));
 routeAdmin(app);
 route(app);
 
-app.listen(port, () => {
+app.use((req, res, next) => {
+  res.status(404).render("client/pages/errors/404", {
+    pageTitle: "404 Not Found"
+  });
+});
+
+server.listen(port, () => {
     console.log("sucess sadsadsadsadsad");
 })
 //

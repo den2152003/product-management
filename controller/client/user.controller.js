@@ -1,5 +1,7 @@
 const md5 = require("md5");
 const User = require('../../model/user.model');
+const Cart = require('../../model/cart.model');
+
 const ForgotPassword = require('../../model/forgot-password.model');
 const generateHelper = require("../../helper/generate");
 const sendMailHelper = require("../../helper/sendMail");
@@ -18,13 +20,13 @@ module.exports.registerPost = async (req, res) => {
     req.body.password = md5(req.body.password);
 
     const emailExits = await User.findOne({
-        deleted:false,
-        email:req.body.email
+        deleted: false,
+        email: req.body.email
     })
 
-    if(emailExits){
+    if (emailExits) {
         req.flash("error", "Email đã tồn tại");
-        backURL=req.header('Referer') || '/';
+        backURL = req.header('Referer') || '/';
         // do your thang
         res.redirect(backURL);
         return;
@@ -33,8 +35,6 @@ module.exports.registerPost = async (req, res) => {
     const user = new User(req.body);
 
     await user.save();
-
-    console.log(user);
 
     res.cookie("tokenUser", user.tokenUser);
 
@@ -54,27 +54,41 @@ module.exports.loginPost = async (req, res) => {
     const password = req.body.password;
 
     const user = await User.findOne({
-        deleted:false,
-        email:req.body.email
+        deleted: false,
+        email: req.body.email
     })
 
-    if(!user){
+    if (!user) {
         req.flash("error", "Email không tồn tại");
-        backURL=req.header('Referer') || '/';
+        backURL = req.header('Referer') || '/';
         // do your thang
         res.redirect(backURL);
         return;
     }
 
-    if(md5(password) != user.password){
+    if (md5(password) != user.password) {
         req.flash("error", "Sai mật khẩu");
-        backURL=req.header('Referer') || '/';
+        backURL = req.header('Referer') || '/';
+        // do your thang
+        res.redirect(backURL);
+        return;
+    }
+
+    if (user.status == "inactive") {
+        req.flash("error", "tài khoản đã bị khóa");
+        backURL = req.header('Referer') || '/';
         // do your thang
         res.redirect(backURL);
         return;
     }
 
     res.cookie("tokenUser", user.tokenUser);
+
+    await Cart.updateOne({
+        _id: req.cookies.cartId
+    }, {
+        user_id: user.id
+    });
 
     res.redirect("/");
 }
@@ -98,13 +112,13 @@ module.exports.forgotPasswordPost = async (req, res) => {
     const email = req.body.email;
 
     const user = await User.findOne({
-        deleted:false,
-        email:email
+        deleted: false,
+        email: email
     })
 
-    if(!user){
+    if (!user) {
         req.flash("error", "Email không tồn tại");
-        backURL=req.header('Referer') || '/';
+        backURL = req.header('Referer') || '/';
         // do your thang
         res.redirect(backURL);
         return;
@@ -114,11 +128,11 @@ module.exports.forgotPasswordPost = async (req, res) => {
     const otp = generateHelper.generateRandomNumber(8);
 
     const forgotPasswordSchema = {
-            email: email,
-            otp: otp,
-            expireAt: Date.now()
-        }
-    
+        email: email,
+        otp: otp,
+        expireAt: Date.now()
+    }
+
     console.log(forgotPasswordSchema);
 
     const forgotPassword = new ForgotPassword(forgotPasswordSchema);
@@ -154,9 +168,9 @@ module.exports.otpPasswordPost = async (req, res) => {
         otp: otp
     });
 
-    if(!result){
+    if (!result) {
         req.flash("error", "OTP k hợp lệ");
-        backURL=req.header('Referer') || '/';
+        backURL = req.header('Referer') || '/';
         // do your thang
         res.redirect(backURL);
         return;
@@ -183,7 +197,7 @@ module.exports.resetPasswordPost = async (req, res) => {
     const tokenUser = req.cookies.tokenUser;
 
     await User.updateOne(
-        {tokenUser: tokenUser},
+        { tokenUser: tokenUser },
         {
             password: md5(password)
         }

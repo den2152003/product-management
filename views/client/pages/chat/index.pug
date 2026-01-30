@@ -1,0 +1,52 @@
+extends ../../layout/default.pug
+include ../../mixin/box-head.pug
+include ../../mixin/alert.pug
+
+block main
+  +alert-success(5000)
+  .container.my-3
+    .row
+      .col-12
+        include ../../partial/list-btn-users.pug 
+
+  .container.my-3
+    .row
+      .col-12
+        +box-head("Chat")
+
+    .row
+      .col-12
+        //- Quan trọng: my-id để phân biệt tin nhắn của mình và người khác
+        .chat(my-id=user.id)
+          .inner-body
+            each chat in chats
+              div(class=(chat.user_id == user.id ? "inner-outgoing" : "inner-incoming"))
+                if(chat.user_id != user.id)
+                  .inner-name #{chat.infoUser ? chat.infoUser.fullName : "Người dùng"}
+                .inner-content
+                  if(chat.content)
+                    .inner-text #{chat.content}
+                  if(chat.images)
+                    .inner-images
+                      each img in chat.images
+                        img(src=img)
+            
+            //- Vùng hiển thị hiệu ứng đang gõ
+            .inner-list-typing
+
+          .inner-foot
+            //- Khối chọn emoji (ẩn mặc định)
+            .inner-list-emoji.d-none
+              emoji-picker
+            
+            form(class="inner-form" action="")
+              input(type="text" placeholder="Nhập nội dung..." name="content")
+              
+              <div class="custom-file-container" data-upload-id="my-unique-id"></div>
+              
+              //- Nút bấm để Bật/Tắt bảng emoji
+              span(class="btn btn-light mx-1 button-emoji")
+                i.fa-regular.fa-face-smile
+                
+              button
+                i.fa-solid.fa-paper-plane

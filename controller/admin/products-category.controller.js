@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const ProductCategory = require("../../model/product-category.model");
+const Account = require("../../model/account.model");
 const filterStatusHelper = require("../../helper/filterStatus");
 const searchHelper = require("../../helper/search");
 const createTreeHelper = require("../../helper/createTree");
@@ -35,6 +36,12 @@ module.exports.index = async (req, res) => {
 
     const newRecords = createTreeHelper.tree(records);
 
+    for(const record of records){
+        const user = await Account.findOne({_id: record.createdBy.account_id});
+        if(user)
+            record.accountFullName = user.fullName;
+    }
+
     res.render("admin/pages/products-category/index", {
         pageTitle: "Trang danh sách danh mục",
         filterStatus: filterStatus,
@@ -66,9 +73,14 @@ module.exports.createPost = async (req, res) => {
         req.body.position = parseInt(req.body.position);
     }
 
+    req.body.createdBy = {
+        account_id: res.locals.user._id
+    };
+
     const records = new ProductCategory(req.body);
     await records.save();
 
+    req.flash("success", `Thêm mới danh mục thành công!`);
     res.redirect("/admin/products-category");
 }
 

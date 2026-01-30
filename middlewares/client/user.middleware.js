@@ -9,8 +9,6 @@ module.exports.infoUser = async (req, res, next) => {
             deleted:false
         }).select("-password");
 
-        console.log(user);
-
         if(user)
             res.locals.user = user;
     }

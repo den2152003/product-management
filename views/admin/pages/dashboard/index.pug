@@ -1,9 +1,60 @@
 extends ../../layout/default.pug
 
-block main 
-    h1 Trang chủ
+block main
+  h1(class="mb-4") Trang tổng quan
 
-    div #{user}
-    div -------------------------------
-    div #{role.title}
-    div #{role.permissions}
+  .row.mt-4
+    //- Thẻ thông tin cá nhân
+    .col-12
+      .card.mb-4
+        .card-header Thông tin cá nhân
+        .card-body
+          if(user.avatar)
+            img(
+              src=user.avatar
+              style="width: 100px; margin-bottom: 15px; border-radius: 5px;"
+            )
+          if(user.fullName)
+            p Họ tên: <b>#{user.fullName}</b>
+          if(user.email)
+            p Email: <b>#{user.email}</b>
+          if(user.phone)
+            p Số điện thoại: <b>#{user.phone}</b>
+          if(role.title)
+            p Phân quyền: <b>#{role.title}</b>
+
+    //- Thẻ thống kê Danh mục sản phẩm
+    .col-6
+      .card.mb-4
+        .card-header Danh mục sản phẩm
+        .card-body
+          p Số lượng: <b>#{statistic.category.total}</b>
+          p Hoạt động: <b>#{statistic.category.active}</b>
+          p Dừng hoạt động: <b>#{statistic.category.inactive}</b>
+
+    //- Thẻ thống kê Sản phẩm
+    .col-6
+      .card.mb-4
+        .card-header Sản phẩm
+        .card-body
+          p Số lượng: <b>#{statistic.product.total}</b>
+          p Hoạt động: <b>#{statistic.product.active}</b>
+          p Dừng hoạt động: <b>#{statistic.product.inactive}</b>
+
+    //- Thẻ thống kê Tài khoản admin
+    .col-6
+      .card.mb-4
+        .card-header Tài khoản admin
+        .card-body
+          p Số lượng: <b>#{statistic.account.total}</b>
+          p Hoạt động: <b>#{statistic.account.active}</b>
+          p Dừng hoạt động: <b>#{statistic.account.inactive}</b>
+
+    //- Thẻ thống kê Tài khoản client
+    .col-6
+      .card.mb-4
+        .card-header Tài khoản client
+        .card-body
+          p Số lượng: <b>#{statistic.user.total}</b>
+          p Hoạt động: <b>#{statistic.user.active}</b>
+          p Dừng hoạt động: <b>#{statistic.user.inactive}</b>

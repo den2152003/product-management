@@ -1,0 +1,63 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success(5000)
+
+  h1.mb-4 Thông tin cá nhân
+
+  .card.mb-4
+    .card-header
+      b Thông tin chung
+    .card-body
+      .row.mb-3
+        .col-md-4.text-center
+          if (user.avatar)
+            img(
+              src=user.avatar
+              alt=user.fullName
+              width="150px"
+              height="150px"
+              class="img-thumbnail rounded-circle mb-2"
+            )
+          else
+            img(
+              src="/admin/images/avatar-default.png"
+              width="150px"
+              height="150px"
+              class="img-thumbnail rounded-circle mb-2"
+            )
+        .col-md-8
+          table.table.table-borderless
+            tbody
+              tr
+                th(scope='row' style="width: 150px") Họ tên:
+                td #{user.fullName}
+              tr
+                th(scope='row') Email:
+                td #{user.email}
+              tr
+                th(scope='row') Số điện thoại:
+                td #{user.phone}
+              tr
+                th(scope='row') Trạng thái:
+                td
+                  if (user.status === "active")
+                    span.badge.badge-success Hoạt động
+                  else
+                    span.badge.badge-danger Dừng hoạt động
+              tr
+                th(scope='row') Quyền:
+                td 
+                  // Giả sử bạn có biến roleName hoặc lấy từ role_id
+                  span.badge.badge-info #{role.title} 
+              tr
+                th(scope='row') Ngày tạo:
+                td #{moment(user.createdAt).format("DD/MM/YYYY HH:mm:ss")}
+
+  .row
+    .col-12.text-right
+      a(
+        href=`/admin/my-account/edit`
+        class="btn btn-warning"
+      ) Chỉnh sửa thông tin

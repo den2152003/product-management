@@ -13,7 +13,6 @@ module.exports.login = async (req, res) => {
             pageTitle: "Đăng nhập"
         });
     }
-
 }
 
 //[POST] /admin/auth/login

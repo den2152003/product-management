@@ -1,0 +1,94 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+
+block main
+
+  h1.mb-4 Chỉnh sửa thông tin cá nhân
+
+  form(
+    action=`/admin/my-account/edit?_method=PATCH`
+    method="POST"
+    enctype="multipart/form-data"
+  )
+    .card.mb-4
+      .card-header
+        b Thông tin cơ bản
+      .card-body
+        .row
+          .col-md-8
+            div(class="form-group")
+              label(for="fullName") Họ tên *
+              input(
+                type="text"
+                class="form-control"
+                id="fullName"
+                name="fullName"
+                required
+                value=user.fullName
+              )
+            
+            div(class="form-group")
+              label(for="email") Email *
+              input(
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                required
+                value=user.email
+              )
+
+            div(class="form-group")
+              label(for="phone") Số điện thoại
+              input(
+                type="text"
+                class="form-control"
+                id="phone"
+                name="phone"
+                value=user.phone
+              )
+
+            div(class="form-group")
+              label(for="password") Mật khẩu mới
+              input(
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="Nhập mật khẩu mới nếu muốn thay đổi"
+              )
+              small(class="form-text text-muted") Để trống nếu giữ nguyên mật khẩu cũ.
+
+          .col-md-4
+            div(
+              class="form-group"
+              upload-image
+            )
+              label(for="avatar") Ảnh đại diện
+              input(
+                type="file"
+                class="form-control-file"
+                id="avatar"
+                name="avatar"
+                accept="image/*"
+                upload-image-input
+              )
+              img(
+                src=(user.avatar ? user.avatar : "/admin/images/avatar-default.png")
+                class="img-thumbnail mt-2"
+                width="150px"
+                upload-image-preview
+              )
+
+    .row
+      .col-12
+        button(
+          type="submit"
+          class="btn btn-primary mr-2"
+        ) Cập nhật
+        a(
+          href="/admin/my-account"
+          class="btn btn-secondary"
+        ) Quay lại
+
+  script(src="/admin/js/my-account.js")

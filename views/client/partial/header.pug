@@ -1,24 +1,48 @@
+include ../mixin/sub-menu.pug
+
 header.header
   .container
     .row.align-items-center
       .col-3
         .inner-logo
           a(href="/")
-            img(src="/images/logo.svg", alt="Logo")
-      .col-9
+            img(src=settingsGeneral.logo, alt="Logo")
+      .col-5
+        form(
+          action="/search"
+          method="GET"
+        )
+          div(class="form-group d-flex mb-0")
+            input(
+              type="text"
+              placeholder="Nhập từ khóa..."
+              class="form-control"
+              name="keyword"
+            )
+            button(
+              type="submit"
+              class="btn btn-primary"
+            ) Tìm
+      .col-4
         .inner-menu
           ul
             li
               a(href="/") Trang chủ
-            li
+            li(class="sub-menu")
               a(href="/products") Sản phẩm
+              +sub-menu(layoutProductsCategory, "/products")
+            li 
+              a(href="/cart") Giỏ hàng (#{cartMini ?  cartMini.totalQuantity : "0"})
             if(user)
-              li 
+              li(class="sub-menu")
+                a(href="/chat") Chat
+              li(class="sub-menu")
                 a(href="/user/info") #{user.fullName}
-              li 
+              li(class="sub-menu")
                 a(href="/user/logout") Đăng xuất
+              
             else
-              li
+              li(class="sub-menu")
                 a(href="/user/login") Đăng nhập
-              li
+              li(class="sub-menu")
                 a(href="/user/register") Đăng ký

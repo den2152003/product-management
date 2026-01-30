@@ -17,6 +17,13 @@ const productCategorySchema = new mongoose.Schema(
             unique: true
         },
         thumbnail: String,
+        createdBy:{
+            account_id: String,
+            createAt: {
+                type: Date,
+                default: Date.now
+            }
+        },
         position: Number,
         delete: {
             type: Boolean,

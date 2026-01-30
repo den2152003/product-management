@@ -1,0 +1,33 @@
+doctype html
+html
+  head
+    title #{pageTitle}
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css")
+    style.
+      .error-template { padding: 40px 15px; text-align: center; }
+      .error-actions { margin-top: 15px; margin-bottom: 15px; }
+      .error-actions .btn { margin-right: 10px; }
+      body {
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+  body
+    .container
+      .row
+        .col-md-12
+          .error-template
+            h1 Rất tiếc!
+            h2 404 Not Found
+            .error-details
+              p Xin lỗi, trang bạn yêu cầu không tồn tại hoặc đã bị chuyển dời!
+            .error-actions
+              //- Nút quay về trang chủ
+              a(href="/" class="btn btn-primary btn-lg") 
+                span.glyphicon.glyphicon-home
+                |  Quay lại trang chủ
+              //- Nút quay lại trang trước đó bằng Javascript
+              button(onclick="history.back()" class="btn btn-outline-secondary btn-lg") Trở về trang trước
