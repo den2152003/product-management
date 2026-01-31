@@ -1,0 +1,27 @@
+extends ../../layout/default.pug
+
+block main
+  .container.my-3
+    .row
+      .col-12.d-flex.justify-content-between.align-items-center
+        h2 Danh sách phòng chat
+        //- Nút tạo phòng chat mới
+        a(
+          href="/rooms-chat/create"
+          class="btn btn-success"
+        ) + Tạo nhóm mới
+
+    .row.mt-3
+      each room in listRoomChat
+        .col-6.mb-3
+          div(class="box-room")
+            div(class="inner-avatar")
+              //- Nếu là chat 2 người, bạn có thể xử lý logic lấy avatar bạn bè ở đây
+              img(src="/images/room-default.png" alt=room.title)
+            div(class="inner-info")
+              div(class="inner-name") #{room.title || "Phòng Chat"}
+              div(class="inner-buttons")
+                a(
+                  href=`/chat/${room.id}`
+                  class="btn btn-sm btn-primary"
+                ) Nhắn tin

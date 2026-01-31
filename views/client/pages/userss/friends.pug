@@ -1,0 +1,34 @@
+extends ../../layout/default.pug
+
+block main
+  .container.my-3
+    .row
+      .col-12
+        include ../../partial/list-btn-users.pug 
+
+    .row
+      if(users.length > 0)
+        each user in users
+          .col-6
+            div(class="box-user")
+              div(class="inner-avatar")
+                img(src=(user.avatar ? user.avatar : "/images/ava-default.png") alt=user.fullName)
+              div(class="inner-info")
+                div(class="inner-name") #{user.fullName}
+                div(class="inner-buttons")
+                  a(
+                    href=`/chat/${user.roomChatId}`
+                    class="btn btn-sm btn-primary mr-1"
+                  ) Nhắn tin
+                  button(
+                    class="btn btn-sm btn-danger btn-unfriend"
+                    btn-unfriend=user.id
+                  ) Hủy kết bạn
+                div(class="inner-status" status=user.statusOnline user-id=user.id)
+                  i.fa-solid.fa-circle
+      else
+        .col-12
+          p.text-center Bạn chưa có người bạn nào. Hãy đi kết bạn nhé!
+
+block script 
+  script(src="/js/users.js")

@@ -35,7 +35,9 @@ header.header
               a(href="/cart") Giỏ hàng (#{cartMini ?  cartMini.totalQuantity : "0"})
             if(user)
               li(class="sub-menu")
-                a(href="/chat") Chat
+                a(href="/users/friends") Bạn bè
+              li(class="sub-menu")
+                a(href="/rooms-chat") Phòng chat
               li(class="sub-menu")
                 a(href="/user/info") #{user.fullName}
               li(class="sub-menu")

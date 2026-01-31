@@ -6,6 +6,8 @@ const ForgotPassword = require('../../model/forgot-password.model');
 const generateHelper = require("../../helper/generate");
 const sendMailHelper = require("../../helper/sendMail");
 
+const usersSocket = require("../../sockets/client/users.socket");
+
 
 //[GET] /user/register
 module.exports.register = async (req, res) => {
@@ -84,17 +86,32 @@ module.exports.loginPost = async (req, res) => {
 
     res.cookie("tokenUser", user.tokenUser);
 
+    await User.updateOne({_id : user.id},{statusOnline: "online"});
+
+    _io.once("connection", (socket) => {
+        socket.broadcast.emit("SERVER_RETURN_USER_ONLINE", user.id);
+    });
+
     await Cart.updateOne({
         _id: req.cookies.cartId
     }, {
         user_id: user.id
     });
 
+
     res.redirect("/");
 }
 
 //[GET] /user/logout
 module.exports.logout = async (req, res) => {
+    const userId = res.locals.user.id;
+
+    await User.updateOne({_id : userId},{statusOnline: "offline"});
+
+    _io.once("connection", (socket) => {
+        socket.broadcast.emit("SERVER_RETURN_USER_OFFLINE", userId);
+    });
+
     res.clearCookie("tokenUser");
 
     res.redirect("/");
